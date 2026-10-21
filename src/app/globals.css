@@ -1,0 +1,232 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-instrument);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-instrument);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-lime: var(--lime);
+  --color-pine: var(--pine);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-status-success-foreground: var(--status-success-foreground);
+  --color-status-warning-foreground: var(--status-warning-foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Magic UI marquee. Duration and gap are set on the component. */
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  --animate-marquee-vertical: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
+:root {
+  /* Share Your Car tokens. Buttons are ink, the same black as the type.
+     Lime and brass both looked weak on the cream page. Black is the
+     action color, the way a showroom uses black type and black keys. */
+  --ink: #0b0f14;
+  --paper: #f5f2ec;
+  --lime: #f5f2ec;
+  --pine: #1a1612;
+  --success: #3e4650;
+  --warning: #f59e0b;
+  --status-success-foreground: #0b0f14;
+  --status-warning-foreground: #0b0f14;
+  --background: #f5f2ec;
+  --foreground: #0b0f14;
+  --card: #ffffff;
+  --card-foreground: #0b0f14;
+  --popover: #ffffff;
+  --popover-foreground: #0b0f14;
+  --primary: #0b0f14;
+  --primary-foreground: #f5f2ec;
+  --secondary: #1a1612;
+  --secondary-foreground: #f5f2ec;
+  --muted: #eae6de;
+  --muted-foreground: #3e4650;
+  --accent: #eae6de;
+  --accent-foreground: #0b0f14;
+  --destructive: #b42318;
+  --border: #ddd7cc;
+  --input: #ddd7cc;
+  --ring: #0b0f14;
+  --chart-1: #0b0f14;
+  --chart-2: #1a1612;
+  --chart-3: #3e4650;
+  --chart-4: #f59e0b;
+  --chart-5: #0b0f14;
+  --radius: 1rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0b0f14;
+  --sidebar-primary: #0b0f14;
+  --sidebar-primary-foreground: #f5f2ec;
+  --sidebar-accent: #eae6de;
+  --sidebar-accent-foreground: #0b0f14;
+  --sidebar-border: #ddd7cc;
+  --sidebar-ring: #0b0f14;
+}
+
+.dark {
+  /* Night mode stays in the same cool black as the page.
+     The old card and bar colors were warm brown, which looked stained
+     next to the black. Charcoal here is the lifted black Apple and
+     Polestar use for dark surfaces, not a second brand color. */
+  --status-success-foreground: #f5f2ec;
+  --status-warning-foreground: #f5f2ec;
+  --background: #0b0f14;
+  --foreground: #f5f2ec;
+  --card: #171c22;
+  --card-foreground: #f5f2ec;
+  --popover: #171c22;
+  --popover-foreground: #f5f2ec;
+  --primary: #f5f2ec;
+  --primary-foreground: #0b0f14;
+  --secondary: #12171e;
+  --secondary-foreground: #f5f2ec;
+  --muted: #222831;
+  --muted-foreground: #a8adb4;
+  --accent: #222831;
+  --accent-foreground: #f5f2ec;
+  --destructive: #f0a8a2;
+  --border: #2a313a;
+  --input: #222831;
+  --ring: #f5f2ec;
+  --chart-1: #f5f2ec;
+  --chart-2: #a8adb4;
+  --chart-3: #3e4650;
+  --chart-4: #f59e0b;
+  --chart-5: #f5f2ec;
+  --sidebar: #171c22;
+  --sidebar-foreground: #f5f2ec;
+  --sidebar-primary: #f5f2ec;
+  --sidebar-primary-foreground: #0b0f14;
+  --sidebar-accent: #222831;
+  --sidebar-accent-foreground: #f5f2ec;
+  --sidebar-border: #2a313a;
+  --sidebar-ring: #f5f2ec;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Stop a sideways scrollbar. The hero zoom and city ticker are wider
+       than the screen; clip keeps them from pushing the whole page. */
+    overflow-x: clip;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Magic UI marquee motion. Each copy slides by its own width plus the gap. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+/* Slow zoom on the hero photo. The hero frame clips it so the page
+   does not grow a bottom scrollbar while the picture moves. */
+@keyframes syc-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* The photo already has the lamps painted on. These covers sit on the
+   headlights and fade in, so the car looks like it switches them off, then on.
+   Most of the cycle stays lit. The off moment is short, not a hazard blink. */
+@keyframes syc-lamps {
+  0%,
+  48% {
+    opacity: 0;
+  }
+  62%,
+  76% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+/* View transitions carry the car photo from a listing into booking. */
+::view-transition-group(*) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  .animate-marquee,
+  .animate-marquee-vertical,
+  .syc-drift,
+  .syc-lamps {
+    animation: none !important;
+  }
+
+  .syc-lamps {
+    opacity: 0;
+  }
+}
