@@ -53,6 +53,9 @@ export function ProfileScreen() {
                   .filter(Boolean)
                   .join(", ")}
           </CardDescription>
+          <Button nativeButton={false} render={<Link href="/favorites" />} variant="outline" className="mt-3 w-fit">
+            See saved cars
+          </Button>
         </CardHeader>
       </Card>
       <div className="flex gap-2">

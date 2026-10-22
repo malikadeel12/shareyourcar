@@ -171,30 +171,30 @@
   }
 }
 
-/* Slow zoom on the hero photo. The hero frame clips it so the page
-   does not grow a bottom scrollbar while the picture moves. */
+/* The hero photo eases closer, then back. One picture only, clipped by the
+   hero, so the page itself does not grow or scroll sideways. */
 @keyframes syc-drift {
   from {
     transform: scale(1);
   }
   to {
-    transform: scale(1.08);
+    transform: scale(1.06);
   }
 }
 
-/* The photo already has the lamps painted on. These covers sit on the
-   headlights and fade in, so the car looks like it switches them off, then on.
-   Most of the cycle stays lit. The off moment is short, not a hazard blink. */
+/* The photo already has the lamps painted on. A dark cover sits on them.
+   Lights stay on, then go dark long enough to see, then come back.
+   The wheel is not involved, so scrolling stays normal. */
 @keyframes syc-lamps {
   0%,
-  48% {
+  20% {
     opacity: 0;
   }
-  62%,
-  76% {
+  36%,
+  64% {
     opacity: 1;
   }
-  92%,
+  82%,
   100% {
     opacity: 0;
   }
@@ -207,6 +207,24 @@
   to {
     transform: translateY(calc(-100% - var(--gap)));
   }
+}
+
+/* A new page arrives from the right. The animation always ends visible,
+   so a slow frame cannot leave the screen blank. */
+@keyframes syc-page {
+  from {
+    opacity: 0;
+    transform: translateX(36px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.syc-page {
+  /* forwards only: a delayed first frame must not hold the page invisible */
+  animation: syc-page 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* View transitions carry the car photo from a listing into booking. */
@@ -222,7 +240,8 @@
   .animate-marquee,
   .animate-marquee-vertical,
   .syc-drift,
-  .syc-lamps {
+  .syc-lamps,
+  .syc-page {
     animation: none !important;
   }
 

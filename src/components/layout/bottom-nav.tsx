@@ -32,9 +32,10 @@ export function BottomNav() {
     >
       <ul className="grid grid-cols-5">
         {items.map((item) => {
+          // Host is the fleet page only. /host-tools must not light this tab.
           const active =
-            item.href === "/"
-              ? pathname === "/"
+            item.href === "/" || item.href === "/host"
+              ? pathname === item.href
               : pathname.startsWith(item.href)
           const Icon = item.icon
           return (

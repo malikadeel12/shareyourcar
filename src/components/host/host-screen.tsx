@@ -19,6 +19,7 @@ import Image from "next/image"
 
 import { hostFleetIds, hostMetrics } from "@/data/bookings"
 import { NumberTicker } from "@/components/motion/number-ticker"
+import { Reveal } from "@/components/motion/reveal"
 import { useMarketplace } from "@/components/providers/marketplace-provider"
 import { Switch } from "@/components/ui/switch"
 import { getVehicle } from "@/data/vehicles"
@@ -37,9 +38,11 @@ export function HostScreen() {
             <p className="text-xs tracking-[0.22em] text-paper/60 uppercase">
               Host tools
             </p>
-            <h1 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
-              Your fleet
-            </h1>
+            <Reveal>
+              <h1 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] text-paper md:text-7xl">
+                Your fleet
+              </h1>
+            </Reveal>
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-paper/75">
               Listing is free. You set the price, the calendar, and which requests
               to accept. The same tools cover one car or a small fleet: weekly and

@@ -29,6 +29,8 @@ type VehicleGridProps = {
   from?: string
   to?: string
   pause?: boolean
+  /** Recommended keeps the catalog order. The other sorts use price or the car's rating. */
+  sort?: "recommended" | "price-asc" | "price-desc" | "rating"
 }
 
 export function VehicleGrid({
@@ -40,9 +42,15 @@ export function VehicleGrid({
   from,
   to,
   pause = false,
+  sort = "recommended",
 }: VehicleGridProps) {
   const [loading, setLoading] = useState(pause)
-  const vehicles = filterVehicles({ location, category, price, seats, fuel })
+  const vehicles = filterVehicles({ location, category, price, seats, fuel }).slice()
+  // --- Sort ---
+  // Recommended is the order the cars are listed. Price and rating reorder that same list.
+  if (sort === "price-asc") vehicles.sort((a, b) => a.pricePerDay - b.pricePerDay)
+  if (sort === "price-desc") vehicles.sort((a, b) => b.pricePerDay - a.pricePerDay)
+  if (sort === "rating") vehicles.sort((a, b) => b.rating - a.rating)
 
   useEffect(() => {
     if (!pause) return

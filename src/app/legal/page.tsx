@@ -5,6 +5,7 @@
  */
 
 import type { Metadata } from "next"
+import Link from "next/link"
 
 import { legalDocs } from "@/data/site-pages"
 
@@ -31,7 +32,11 @@ export default function LegalPage() {
           Share Your Car does not underwrite, issue, or guarantee insurance coverage. Coverage is provided by Bonzah, a licensed broker. Trip protection runs in 24-hour cycles from the scheduled pickup time. Drivers must be 21 or older, hold a valid license, and be listed on the rental agreement. Policy limits, exclusions, and the renter&apos;s financial responsibility are shown before purchase.
         </p>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Hosts must keep an active automobile policy that meets state requirements and should confirm with their insurer that peer-to-peer sharing is allowed.
+          Hosts must keep an active automobile policy that meets state requirements and should confirm with their insurer that peer-to-peer sharing is allowed. The coverage names and the three Bonzah tiers are on the{" "}
+          <Link href="/insurance" className="underline underline-offset-2">
+            protection page
+          </Link>
+          .
         </p>
       </section>
 

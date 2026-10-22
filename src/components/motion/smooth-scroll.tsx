@@ -1,33 +1,16 @@
 "use client"
 
 /**
- * What: Lenis smooth scroll for the marketing pages.
- * Why: the home screen should glide, but motion preferences and dialogs
- *      should not fight a custom scroller.
+ * What changed: the rubber-band scroller was removed.
+ * Why: Sixt and other rental sites use the browser's own scroll. The extra
+ *      scroller made the wheel feel late, which is what felt slow.
  * Related: src/app/layout.tsx
+ * Note: MCP Context 7 — motion should not fight the page. This wrapper stays
+ *       so the layout does not have to change.
  */
 
-import { ReactLenis } from "lenis/react"
-import { useEffect, useState, type ReactNode } from "react"
+import type { ReactNode } from "react"
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
-  const [enabled, setEnabled] = useState(false)
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const update = () => setEnabled(!media.matches)
-    update()
-    media.addEventListener("change", update)
-    return () => media.removeEventListener("change", update)
-  }, [])
-
-  if (!enabled) {
-    return children
-  }
-
-  return (
-    <ReactLenis root options={{ autoRaf: true, duration: 1.05, lerp: 0.1 }}>
-      {children}
-    </ReactLenis>
-  )
+  return children
 }

@@ -6,10 +6,13 @@
  * Related: src/data/story.ts, src/data/bookings.ts
  */
 
+import type { ReactNode } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { BadgeCheck, CalendarRange, Car, Clock, FileText, Shield, ShieldCheck, Wallet } from "lucide-react"
+import { BadgeCheck, CalendarCheck, CalendarRange, Car, CarFront, Clock, FileText, KeyRound, Search, Shield, ShieldCheck, Wallet } from "lucide-react"
 
+import { StepStage } from "@/components/layout/step-stage"
+import { Reveal } from "@/components/motion/reveal"
 import { Button } from "@/components/ui/button"
 import { bookingSteps, hostStories } from "@/data/bookings"
 import { audiences, cityEarnings, faqs } from "@/data/story"
@@ -19,6 +22,27 @@ import { bookHref, searchHref } from "@/lib/search"
 import { cn } from "@/lib/utils"
 
 const feature = getVehicle("jeep-wrangler-4xe-2021")
+
+// --- Shared title entrance ---
+// Big section titles use one blur-fade so the page does not invent a new
+// animation for every heading.
+function FadeHeading({
+  id,
+  className,
+  children,
+}: {
+  id?: string
+  className?: string
+  children: ReactNode
+}) {
+  return (
+    <Reveal>
+      <h2 id={id} className={className}>
+        {children}
+      </h2>
+    </Reveal>
+  )
+}
 
 export function FeaturedSpread() {
   if (!feature) return null
@@ -38,9 +62,9 @@ export function FeaturedSpread() {
         <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
           Available now · Albany, Georgia
         </p>
-        <h2 className="font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-6xl">
+        <FadeHeading className="font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-6xl">
           {feature.title}
-        </h2>
+        </FadeHeading>
         <p className="text-base leading-relaxed text-muted-foreground">
           {feature.description}
         </p>
@@ -79,9 +103,9 @@ export function Audiences() {
           <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
             Who uses Share Your Car
           </p>
-          <h2 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+          <FadeHeading className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
             Mobility for every journey
-          </h2>
+          </FadeHeading>
           <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
             A work assignment, an airport arrival, or a week while your own car is being repaired. Local hosts cover the gap.
           </p>
@@ -105,23 +129,28 @@ export function Audiences() {
 }
 
 export function TripSteps() {
+  const stepCar = getVehicle("tesla-model-3-2023")
+  if (!stepCar) return null
+
   return (
+    // The four steps used to be equal text columns. The car photo is what
+    // makes the path feel like a rental site instead of a checklist.
     <section className="mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
       <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
         Car rental process
       </p>
-      <h2 className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+      <FadeHeading className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
         Book your ride in four simple steps
-      </h2>
-      <ol className="mt-12 grid gap-10 md:grid-cols-4">
-        {bookingSteps.map((step, index) => (
-          <li key={step.title} className="border-t border-border pt-4">
-            <span className="font-serif text-4xl text-primary">0{index + 1}</span>
-            <h3 className="mt-4 text-lg font-semibold tracking-tight">{step.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
-          </li>
-        ))}
-      </ol>
+      </FadeHeading>
+      <div className="mt-12">
+        <StepStage
+          image={stepCar.images[0]}
+          imageAlt={stepCar.title}
+          caption={`${stepCar.title} · ${stepCar.location}`}
+          steps={bookingSteps}
+          icons={[Search, CalendarCheck, KeyRound, CarFront]}
+        />
+      </div>
       <p className="mt-8 max-w-xl text-sm text-muted-foreground">
         Most trips are approved within 8 hours. Hosts are paid within 48 hours after the trip ends, subject to payment processing and dispute review.
       </p>
@@ -137,9 +166,9 @@ export function EarningsBoard() {
           <p className="text-xs tracking-[0.22em] text-paper/60 uppercase">
             For hosts
           </p>
-          <h2 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+          <FadeHeading className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
             Turn your car into income
-          </h2>
+          </FadeHeading>
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-paper/75">
             On average, U.S. hosts who share a car about 15 days a month see figures like these. Actual earnings vary by vehicle, city, and demand. Listing is free.
           </p>
@@ -177,9 +206,9 @@ export function Stories() {
     <section className="py-16 md:py-24" aria-labelledby="host-stories">
       <div className="mx-auto w-full max-w-7xl px-4 md:px-8">
         <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">Community</p>
-        <h2 id="host-stories" className="mt-2 font-serif text-5xl tracking-[-0.04em] md:text-7xl">
+        <FadeHeading id="host-stories" className="mt-2 font-serif text-5xl tracking-[-0.04em] md:text-7xl">
           From the road
-        </h2>
+        </FadeHeading>
       </div>
       <div className="mt-8 flex gap-4 overflow-x-auto px-4 pb-2 snap-x md:px-8">
         {hostStories.map((story) => (
@@ -208,9 +237,9 @@ export function ProtectionBand() {
         <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
           Protection
         </p>
-        <h2 className="mt-3 font-serif text-4xl tracking-[-0.03em] md:text-5xl">
+        <FadeHeading className="mt-3 font-serif text-4xl tracking-[-0.03em] md:text-5xl">
           Coverage is chosen at checkout
-        </h2>
+        </FadeHeading>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
           Share Your Car is not an insurance company and does not underwrite, issue, or guarantee insurance coverage. Coverage is provided by Bonzah, a licensed broker. Trip protection runs in 24-hour cycles from the scheduled pickup. Drivers must be 21 or older, licensed, and listed on the agreement.
         </p>
@@ -235,9 +264,9 @@ export function Faq() {
     // left empty space on both sides and made this block look unfinished.
     <section className="mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
       <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">Questions</p>
-      <h2 className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+      <FadeHeading className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
         Before you book
-      </h2>
+      </FadeHeading>
       <div className="mt-10 border-b border-border">
         {faqs.map((item) => (
           <details key={item.question} className="group border-t border-border py-5">
@@ -283,9 +312,9 @@ export function CityStops() {
       <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
         Find cars near you
       </p>
-      <h2 className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+      <FadeHeading className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
         Where the cars are listed
-      </h2>
+      </FadeHeading>
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {stops.map((stop) => (
           <Link
@@ -341,9 +370,9 @@ export function TrustReady() {
       <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
         Before the keys
       </p>
-      <h2 className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+      <FadeHeading className="mt-3 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
         Built for trust
-      </h2>
+      </FadeHeading>
       <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
         {readiness.map((item) => (
           <div key={item.title} className="border-t border-border pt-5">
@@ -404,7 +433,7 @@ function OfferCard({
         alt=""
         fill
         sizes={lead ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 1024px) 50vw, 25vw"}
-        className="object-cover motion-safe:transition motion-safe:duration-500 motion-safe:group-hover:scale-[1.03]"
+        className="object-cover motion-safe:transition motion-safe:duration-500 motion-safe:group-hover:scale-[1.06]"
       />
       <div
         aria-hidden
@@ -458,9 +487,9 @@ export function OfferMosaic() {
   return (
     <section className="mx-auto w-full max-w-7xl px-4 pb-6 md:px-8">
       <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">On the fleet</p>
-      <h2 className="mt-2 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+      <FadeHeading className="mt-2 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
         Real cars. Real daily rates.
-      </h2>
+      </FadeHeading>
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <OfferCard
           vehicle={lead}
@@ -499,7 +528,7 @@ const moreWays = [
     body: "Daily, weekly, and monthly trips, with instant booking when the car is free.",
   },
   {
-    href: "/legal",
+    href: "/insurance",
     kicker: "Trust",
     title: "Secure car sharing",
     body: "Identity is checked before pickup. Protection is chosen at checkout through Bonzah.",
@@ -511,15 +540,15 @@ export function MoreWays() {
     <section className="bg-ink text-paper">
       <div className="mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
         <p className="text-xs tracking-[0.22em] text-paper/70 uppercase">What we’re offering</p>
-        <h2 className="mt-3 max-w-4xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+        <FadeHeading className="mt-3 max-w-4xl font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
           Everything you need to rent or share
-        </h2>
+        </FadeHeading>
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {moreWays.map((item) => (
             <Link
               key={item.title}
               href={item.href}
-              className="flex min-h-64 flex-col justify-between rounded-[28px] border border-paper/15 p-6 transition hover:bg-paper/5"
+              className="flex min-h-64 flex-col justify-between rounded-[28px] border border-paper/15 p-6 motion-safe:transition motion-safe:duration-200 motion-safe:hover:border-paper/50"
             >
               <p className="text-xs tracking-[0.22em] text-paper/70 uppercase">{item.kicker}</p>
               <div>

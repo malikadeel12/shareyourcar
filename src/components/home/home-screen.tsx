@@ -5,9 +5,8 @@
  * Why: the photograph already has the lamps lit, so a dark cover on those
  *      spots is what makes them look switched off.
  * Related: src/app/globals.css (syc-lamps), src/components/home/search-card.tsx
- * Note: MCP Context 7 — one motion on the hero, and it stops if the visitor
- *       asked the system to reduce motion. The covers move with the slow zoom
- *       so they stay on the lamps.
+ * Note: MCP Context 7 — the photo stays still, like a rental homepage.
+ *       Only the headlights rest for a moment. Reduced motion leaves them on.
  */
 
 /**
@@ -23,6 +22,7 @@ import Image from "next/image"
 import { motion, useReducedMotion } from "framer-motion"
 
 import { SearchCard } from "@/components/home/search-card"
+import { TextSettle } from "@/components/motion/text-settle"
 import {
   Audiences,
   CityStops,
@@ -52,8 +52,8 @@ export function HomeScreen() {
           Without it the zoom spills past the edge and a sideways scrollbar appears. */}
       <section className="relative overflow-hidden bg-ink text-paper">
         <div className="absolute inset-0 overflow-hidden">
-          {/* The photo and the lamp covers zoom together, so the covers do not slide off the headlights. */}
-          <div className="syc-drift absolute inset-0 motion-safe:animate-[syc-drift_24s_ease-in-out_infinite_alternate]">
+          {/* The photo eases closer on its own. The hero frame clips it, so the page does not scroll sideways. */}
+          <div className="syc-drift absolute inset-0 motion-safe:animate-[syc-drift_18s_ease-in-out_infinite_alternate]">
             <Image
               src={hero.images[0]}
               alt=""
@@ -73,29 +73,41 @@ export function HomeScreen() {
             }}
           />
         </div>
-        <motion.div
-          className="relative mx-auto flex min-h-[calc(100svh-7.5rem)] w-full max-w-7xl flex-col justify-end gap-4 px-4 pt-4 pb-24 md:min-h-[92svh] md:gap-5 md:px-8 md:pt-28 md:pb-12"
-          initial={reduce ? false : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="text-xs tracking-[0.22em] text-paper/75 uppercase">
-            Peer-to-peer · United States
-          </p>
-          <h1 className="max-w-5xl font-serif text-[2.55rem] leading-[0.9] tracking-[-0.045em] text-paper md:text-[6.2rem]">
-            Rent the Perfect Car from Local Hosts
-          </h1>
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <p className="max-w-md text-sm leading-relaxed text-paper/85">
-              We connect vehicle owners and renters through a secure, flexible platform built for everyday travel, work trips, and long-term mobility.
+        {/* Two beats you can watch: the headline rises, then the search follows.
+            They stay sharp. Nothing here is tied to the scroll wheel. */}
+        <div className="relative mx-auto flex min-h-[calc(100svh-7.5rem)] w-full max-w-7xl flex-col justify-end gap-4 px-4 pt-4 pb-24 md:min-h-[92svh] md:gap-5 md:px-8 md:pt-28 md:pb-12">
+          <motion.div
+            className="flex flex-col gap-4"
+            initial={reduce ? false : { opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="text-xs tracking-[0.22em] text-paper/75 uppercase">
+              Peer-to-peer · United States
             </p>
-            <p className="font-serif text-3xl tracking-tight text-paper md:text-4xl">
-              {formatMoney(hero.pricePerDay)}
-              <span className="ml-2 font-sans text-sm text-paper/75">/ day · {hero.location}</span>
-            </p>
-          </div>
-          <SearchCard className="shadow-[0_18px_50px_rgba(11,15,20,0.28)]" />
-        </motion.div>
+            <TextSettle
+              text="Rent the Perfect Car from Local Hosts"
+              className="max-w-5xl font-serif text-[2.55rem] leading-[0.9] tracking-[-0.045em] text-paper md:text-[6.2rem]"
+            />
+          </motion.div>
+          <motion.div
+            className="flex flex-col gap-4"
+            initial={reduce ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduce ? 0 : 0.65, delay: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <p className="max-w-md text-sm leading-relaxed text-paper/85">
+                We connect vehicle owners and renters through a secure, flexible platform built for everyday travel, work trips, and long-term mobility.
+              </p>
+              <p className="font-serif text-3xl tracking-tight text-paper md:text-4xl">
+                {formatMoney(hero.pricePerDay)}
+                <span className="ml-2 font-sans text-sm text-paper/75">/ day · {hero.location}</span>
+              </p>
+            </div>
+            <SearchCard className="shadow-[0_18px_50px_rgba(11,15,20,0.28)]" />
+          </motion.div>
+        </div>
       </section>
 
       <div>
@@ -185,7 +197,7 @@ function Headlamps() {
       {spots.map((spot) => (
         <span
           key={spot.id}
-          className="syc-lamps absolute rounded-full motion-safe:animate-[syc-lamps_5.2s_ease-in-out_infinite]"
+          className="syc-lamps absolute rounded-full motion-safe:animate-[syc-lamps_5s_ease-in-out_infinite]"
           style={{
             left: spot.left,
             top: spot.top,

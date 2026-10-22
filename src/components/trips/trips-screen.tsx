@@ -19,6 +19,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { KeyRound, MessageSquare } from "lucide-react"
 
+import { Reveal } from "@/components/motion/reveal"
 import { useMarketplace } from "@/components/providers/marketplace-provider"
 import { Button } from "@/components/ui/button"
 import { CardContent } from "@/components/ui/card"
@@ -63,9 +64,11 @@ export function TripsScreen() {
       <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
         Your trips
       </p>
-      <h1 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
-        Welcome back, Renter
-      </h1>
+      <Reveal>
+        <h1 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+          Welcome back, Renter
+        </h1>
+      </Reveal>
       <p className="mt-4 text-sm text-muted-foreground">{renterName}</p>
 
       <Tabs

@@ -14,13 +14,14 @@
  * Related: src/data/vehicles.ts, src/app/book/[vehicleId]/page.tsx
  */
 
-import { useRef, useState } from "react"
-import Image from "next/image"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ViewTransition } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import { BadgeCheck, Heart, MapPin, ShieldCheck } from "lucide-react"
 
+import { PhotoCarousel } from "@/components/home/photo-carousel"
 import { useMarketplace } from "@/components/providers/marketplace-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -46,87 +47,47 @@ type VehicleCardProps = {
 
 export function VehicleCard({ vehicle, from, to, row = false }: VehicleCardProps) {
   const router = useRouter()
+  const reduce = useReducedMotion()
   const { isSaved, toggleSaved } = useMarketplace()
   const saved = isSaved(vehicle.id)
-  const [index, setIndex] = useState(0)
-  const startX = useRef(0)
-  const dragged = useRef(false)
+  // Starts at 0 so the heart sits still until the renter actually taps it.
+  const [pop, setPop] = useState(0)
   const href = bookHref(vehicle.id, from, to)
-
-  function step(direction: number) {
-    setIndex((current) => {
-      const next = current + direction
-      if (next < 0) return vehicle.images.length - 1
-      if (next >= vehicle.images.length) return 0
-      return next
-    })
-  }
 
   const media = (
     <div className="relative h-full">
-      <button
-        type="button"
-        className="block h-full w-full text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        aria-label={`View ${vehicle.title}`}
-        onTouchStart={(event) => {
-          startX.current = event.changedTouches[0]?.clientX ?? 0
-          dragged.current = false
-        }}
-        onTouchEnd={(event) => {
-          const endX = event.changedTouches[0]?.clientX ?? 0
-          const delta = endX - startX.current
-          if (Math.abs(delta) > 36) {
-            dragged.current = true
-            step(delta < 0 ? 1 : -1)
-          }
-        }}
-        onClick={() => {
-          if (dragged.current) {
-            dragged.current = false
-            return
-          }
-          router.push(href)
-        }}
-      >
-        <ViewTransition name={`car-${vehicle.id}`}>
-          <div className={cn("relative overflow-hidden bg-muted", row ? "aspect-[16/10] md:aspect-auto md:h-full md:min-h-72" : "aspect-[4/3]")}>
-            <Image
-              src={vehicle.images[index] ?? vehicle.images[0]}
-              alt=""
-              fill
-              sizes={row ? "(max-width: 768px) 100vw, 58vw" : "(max-width: 768px) 100vw, 33vw"}
-              className="object-cover transition-transform duration-500 hover:scale-[1.03]"
-            />
-          </div>
-        </ViewTransition>
-      </button>
+      <ViewTransition name={`car-${vehicle.id}`}>
+        <PhotoCarousel
+          images={vehicle.images}
+          alt={vehicle.title}
+          sizes={row ? "(max-width: 768px) 100vw, 58vw" : "(max-width: 768px) 100vw, 33vw"}
+          className={row ? "aspect-[16/10] md:aspect-auto md:h-full md:min-h-72" : "aspect-[4/3]"}
+          onOpen={() => router.push(href)}
+        />
+      </ViewTransition>
       <Button
         type="button"
         size="icon"
         variant="outline"
         aria-pressed={saved}
         aria-label={saved ? `Remove ${vehicle.title} from saved` : `Save ${vehicle.title}`}
-        className="absolute top-3 right-3 bg-card"
-        onClick={() => toggleSaved(vehicle.id)}
+        className="absolute top-3 right-3 z-10 bg-card"
+        onClick={() => {
+          toggleSaved(vehicle.id)
+          setPop((count) => count + 1)
+        }}
       >
-        <Heart className={cn(saved && "fill-current")} />
+        {/* The pop is the tap itself: rest, a little larger, then rest again. */}
+        <motion.span
+          key={pop}
+          className="flex"
+          initial={{ scale: 1 }}
+          animate={reduce || pop === 0 ? { scale: 1 } : { scale: [1, 1.2, 1] }}
+          transition={{ duration: 0.35, times: [0, 0.45, 1] }}
+        >
+          <Heart className={cn(saved && "fill-current")} />
+        </motion.span>
       </Button>
-      {vehicle.images.length > 1 ? (
-        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1">
-          {vehicle.images.map((image, dot) => (
-            <button
-              key={image + dot}
-              type="button"
-              aria-label={`Photo ${dot + 1} of ${vehicle.images.length}`}
-              className={cn(
-                "size-1.5 rounded-full bg-white/70",
-                dot === index && "w-4 bg-white"
-              )}
-              onClick={() => setIndex(dot)}
-            />
-          ))}
-        </div>
-      ) : null}
     </div>
   )
 

@@ -1,10 +1,14 @@
 "use client"
 
 /**
- * What: slim top navigation. Links hide on small screens, where the
+ * What: slim top navigation. About, How it works, and Contact sit with
+ *       the other desktop links. Links hide on small screens, where the
  *       bottom bar takes over.
- * Why: desktop should feel like a magazine masthead, not an app tab bar.
- * Related: src/components/layout/bottom-nav.tsx
+ * Why: those pages were only in the footer, so a desktop visitor could
+ *      not reach them from the top.
+ * Related: src/components/layout/bottom-nav.tsx, src/app/about/page.tsx
+ * Note: MCP Context 7 — same pill style as the existing tabs. The phone
+ *       bar stays Home, Search, Trips, Host, and Profile.
  */
 
 import Link from "next/link"
@@ -18,6 +22,9 @@ import { cn } from "cn"
 const links = [
   { href: "/", label: "Home" },
   { href: "/search", label: "Search" },
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
   { href: "/trips", label: "Trips" },
   { href: "/host", label: "Host" },
 ]
@@ -31,9 +38,10 @@ export function SiteHeader() {
         <Wordmark />
         <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
           {links.map((link) => {
+            // Host is the fleet page only. /host-tools must not light this tab.
             const active =
-              link.href === "/"
-                ? pathname === "/"
+              link.href === "/" || link.href === "/host"
+                ? pathname === link.href
                 : pathname.startsWith(link.href)
             return (
               <Link

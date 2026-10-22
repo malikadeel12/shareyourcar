@@ -17,13 +17,14 @@
  */
 
 import { useMemo, useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { useParams, useSearchParams } from "next/navigation"
 import { ViewTransition } from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ShieldCheck } from "lucide-react"
 
+import { PhotoCarousel } from "@/components/home/photo-carousel"
+import { PriceTally } from "@/components/motion/price-tally"
 import { useMarketplace } from "@/components/providers/marketplace-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -54,6 +55,9 @@ export function BookingScreen() {
   const { addTrip } = useMarketplace()
   const reduce = useReducedMotion()
   const [step, setStep] = useState(0)
+  // On a phone the car is shown first. Book now opens the steps.
+  // Desktop ignores this and keeps the form beside the photo.
+  const [bookingOpen, setBookingOpen] = useState(false)
   const [from, setFrom] = useState(params.get("from") || sampleTrip.from)
   const [to, setTo] = useState(params.get("to") || sampleTrip.to)
   const [planId, setPlanId] = useState<ProtectionPlanId>("bonzah-basic")
@@ -133,28 +137,38 @@ export function BookingScreen() {
       </Button>
     </div>
   ) : (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 overflow-x-hidden">
       <ol aria-label="Booking steps" className="flex gap-4">
         {steps.map((label, index) => (
           <li key={label} className="flex flex-col gap-1">
             <span
               className={cn(
                 "text-xs tracking-[0.16em] uppercase",
-                index === step ? "text-foreground" : "text-muted-foreground"
+                index <= step ? "text-foreground" : "text-muted-foreground"
               )}
             >
               0{index + 1} {label}
             </span>
             <span
               className={cn(
-                "h-0.5 w-14",
-                index === step ? "bg-primary" : "bg-border"
+                "h-0.5 w-14 transition-colors duration-300",
+                index <= step ? "bg-primary" : "bg-border"
               )}
             />
           </li>
         ))}
       </ol>
 
+      {/* --- Step body --- */}
+      {/* The panel slides as the renter moves from the car, to protection, to pay. */}
+      <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={step}
+        initial={reduce ? false : { opacity: 0, x: 16 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={reduce ? { opacity: 1 } : { opacity: 0, x: -12 }}
+        transition={{ duration: reduce ? 0 : 0.22, ease: [0.22, 1, 0.36, 1] }}
+      >
       {step === 0 ? (
         <div className="flex flex-col gap-4">
           <div>
@@ -237,7 +251,18 @@ export function BookingScreen() {
             Share Your Car is not an insurance company. Bonzah is the licensed
             broker of record for trip protection offered at checkout.
           </p>
+          {quote ? (
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="text-sm text-muted-foreground">Trip total</span>
+              <span className="font-serif text-4xl tracking-tight">
+                <PriceTally value={quote.total} />
+              </span>
+            </div>
+          ) : null}
           <div className="flex gap-2">
+            <Button variant="outline" className="md:hidden" onClick={() => setBookingOpen(false)}>
+              Back to car
+            </Button>
             <Button variant="outline" onClick={() => setStep(0)}>
               Back
             </Button>
@@ -249,23 +274,59 @@ export function BookingScreen() {
       {step === 2 && quote ? (
         <div className="flex flex-col gap-5">
           <h2 className="font-serif text-4xl tracking-[-0.03em]">Checkout</h2>
+          {/* The same two plans stay here, so a change on checkout counts the total again. */}
+          <fieldset className="flex flex-col gap-2">
+            <legend className="sr-only">Trip protection</legend>
+            {protectionPlans.map((plan) => {
+              const selected = plan.id === planId
+              return (
+                <label
+                  key={plan.id}
+                  className={cn(
+                    "cursor-pointer rounded-2xl border border-border px-3 py-2",
+                    selected && "border-primary bg-accent"
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="protection-checkout"
+                    className="sr-only"
+                    checked={selected}
+                    onChange={() => setPlanId(plan.id)}
+                  />
+                  <span className="flex items-center justify-between gap-3 text-sm">
+                    <span>{plan.name}</span>
+                    <span className="font-semibold">{formatMoney(plan.pricePerDay)}/day</span>
+                  </span>
+                </label>
+              )
+            })}
+          </fieldset>
           <dl className="flex flex-col gap-2 text-sm" aria-live="polite">
             <div className="flex justify-between gap-4">
               <dt>Daily rate · {formatMoney(vehicle.pricePerDay)} × {quote.days}</dt>
-              <dd>{formatMoney(quote.daily)}</dd>
+              <dd>
+                <PriceTally value={quote.daily} />
+              </dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt>{quote.protectionName}</dt>
-              <dd>{formatMoney(quote.protection)}</dd>
+              <dd>
+                <PriceTally value={quote.protection} />
+              </dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt>Service fee</dt>
-              <dd>{formatMoney(quote.serviceFee)}</dd>
+              <dd>
+                <PriceTally value={quote.serviceFee} />
+              </dd>
             </div>
             <Separator />
             <div className="flex justify-between gap-4 text-base font-semibold">
               <dt>Total</dt>
-              <dd>{formatMoney(quote.total)}</dd>
+              <dd>
+                <PriceTally value={quote.total} />
+              </dd>
             </div>
           </dl>
 
@@ -360,36 +421,50 @@ export function BookingScreen() {
               Back
             </Button>
             <Button size="lg" onClick={confirm}>
-              Confirm {formatMoney(quote.total)}
+              Confirm <PriceTally value={quote.total} />
             </Button>
           </div>
         </div>
       ) : null}
+      </motion.div>
+      </AnimatePresence>
     </div>
   )
 
   return (
-    <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 md:grid-cols-12 md:px-8 md:py-10">
+    <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 pb-28 md:grid-cols-12 md:px-8 md:py-10 md:pb-10">
       <div className="md:col-span-5">
         <ViewTransition name={`car-${vehicle.id}`}>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-muted md:aspect-[4/5]">
-            <Image
-              src={vehicle.images[0]}
-              alt={vehicle.title}
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 40vw"
-              className="object-cover"
-            />
-          </div>
+          <PhotoCarousel
+            images={vehicle.images}
+            alt={vehicle.title}
+            priority
+            sizes="(max-width: 768px) 100vw, 40vw"
+            className="aspect-[4/3] rounded-3xl md:aspect-[4/5]"
+          />
         </ViewTransition>
+        <h1 className="mt-4 font-serif text-4xl tracking-[-0.03em] md:hidden">{vehicle.title}</h1>
+        <p className="mt-1 text-sm text-muted-foreground md:hidden">{vehicle.location}</p>
         <p className="mt-4 text-sm text-muted-foreground">
           {vehicle.host.name} · Verified host · {vehicle.host.responseRate}% response rate
         </p>
       </div>
-      <div className="max-md:fixed max-md:inset-x-0 max-md:bottom-[4.5rem] max-md:z-30 max-md:max-h-[70dvh] max-md:overflow-y-auto max-md:rounded-t-3xl max-md:border max-md:border-border max-md:bg-card max-md:p-4 max-md:pb-4 md:col-span-7 md:px-4">
+      <div
+        className={cn(
+          "md:col-span-7 md:px-4",
+          "max-md:fixed max-md:inset-x-0 max-md:bottom-[4.5rem] max-md:z-30 max-md:max-h-[70dvh] max-md:overflow-y-auto max-md:rounded-t-3xl max-md:border max-md:border-border max-md:bg-card max-md:p-4",
+          !bookingOpen && "max-md:hidden"
+        )}
+      >
         <div aria-hidden className="mx-auto mb-3 h-1 w-10 rounded-full bg-border md:hidden" />
         {panel}
+      </div>
+      {/* Sits above the phone nav. The daily rate is this car's real price. */}
+      <div className={cn("fixed inset-x-3 bottom-[5.15rem] z-30 md:hidden", bookingOpen && "hidden")}>
+        <Button size="lg" className="h-12 w-full justify-between px-5" onClick={() => setBookingOpen(true)}>
+          <span>Book now</span>
+          <span>{formatMoney(vehicle.pricePerDay)}/day</span>
+        </Button>
       </div>
     </section>
   )

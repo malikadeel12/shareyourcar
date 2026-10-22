@@ -162,6 +162,171 @@ export const hostQuotes = [
   },
 ]
 
+/**
+ * Guest steps from the live How it works page.
+ * The live page also prints 3.2M guests and 175k hosts. Those counts are not used.
+ * This catalog is six cars.
+ */
+export const guestSteps = [
+  {
+    title: "Find the car",
+    body: "Six cars are listed, five in New York and one Jeep in Albany. You book the exact car in the photo.",
+  },
+  {
+    title: "Book",
+    body: "Some cars can be booked when the calendar is open. Others wait for the host. Most trips are approved within 8 hours.",
+  },
+  {
+    title: "Pick up the keys",
+    body: "Access instructions arrive before pickup. Some cars are keyless. Every driver must be listed on the agreement.",
+  },
+  {
+    title: "Drive and return",
+    body: "Protection is chosen at checkout. Bring the car back when the trip ends.",
+  },
+]
+
+export const whyShare = [
+  {
+    title: "Protection at checkout",
+    body: "Optional trip protection is offered through Bonzah, the licensed broker. Share Your Car does not underwrite coverage.",
+  },
+  {
+    title: "Support hours",
+    body: "Trip support is open daily, 8 AM–8 PM ET. Urgent issues are prioritized.",
+  },
+  {
+    title: "Checked drivers",
+    body: "A driver must be 21 or older, licensed, and listed on the agreement before pickup.",
+  },
+  {
+    title: "Local cars",
+    body: "The cars belong to local hosts. The daily rate on the car is the rate in the quote.",
+  },
+]
+
+/**
+ * Tool names from the live Host tools page.
+ * The live page also claims 40% more earnings and 3x bookings. Those claims are not used.
+ */
+export const hostTools = [
+  {
+    title: "Vehicle listing manager",
+    body: "Photos, a description, and the days the car is free.",
+    points: ["More than one photo", "Instant booking when you allow it", "A calendar you can block"],
+  },
+  {
+    title: "Pricing",
+    body: "You set the daily rate. The cars listed today are $50 or $105.",
+    points: ["The price is on the car", "The quote uses that rate", "No extra marketplace number"],
+  },
+  {
+    title: "Booking management",
+    body: "See a request, decide, and keep the trip on one timeline.",
+    points: ["You approve or decline", "The guest is named on the trip", "Dates stay on the booking"],
+  },
+  {
+    title: "Performance",
+    body: "The fleet page shows earnings, active rentals, and the response rate for this prototype.",
+    points: ["Monthly earnings", "Active rentals", "Next payout"],
+  },
+  {
+    title: "Photos",
+    body: "Each listing uses the photos already on the car. Guests can swipe them.",
+    points: ["Two photos on every car", "Arrows and dots on the card", "The same photos on the booking page"],
+  },
+  {
+    title: "Guest messages",
+    body: "Trip notes stay on the trip. This prototype does not send them.",
+    points: ["A note on the trip", "Support email if you need a person", "No message leaves this browser"],
+  },
+  {
+    title: "Payouts",
+    body: "Hosts are paid within 48 hours after the trip ends, subject to payment processing and dispute review.",
+    points: ["The next payout is shown", "Stripe is marked connected", "Nothing is charged for real"],
+  },
+  {
+    title: "Safety",
+    body: "Identity is checked, and protection is chosen at checkout through Bonzah.",
+    points: ["Drivers 21 or older", "Listed on the agreement", "A valid host auto policy"],
+  },
+]
+
+/** Coverage names and responsibility caps are from the live protection page. Checkout on this prototype uses two plans only. */
+export const coverageTypes = [
+  {
+    mark: "CDW",
+    title: "Collision Damage Waiver",
+    body: "Physical damage to the rental car when there is an accident with another vehicle.",
+  },
+  {
+    mark: "RCLI",
+    title: "Renter's Contingent Liability",
+    body: "Damage to someone else's property, and injury, when the renter is at fault. It does not cover the rental car or its occupants. It provides state minimum coverage where the law allows.",
+  },
+  {
+    mark: "SLI",
+    title: "Supplemental Liability",
+    body: "Adds to RCLI. It is not a policy on its own. It is bought together with RCLI.",
+  },
+  {
+    mark: "PA",
+    title: "Personal accident and effects",
+    body: "Life, medical expenses, and lost or damaged belongings. This is not coverage for the rental car.",
+  },
+]
+
+export const protectionTiers = [
+  {
+    title: "Basic",
+    body: "Collision Damage Waiver for an eligible trip.",
+    owe: "Up to $2,500",
+  },
+  {
+    title: "Standard",
+    body: "Collision Damage Waiver plus contingent liability.",
+    owe: "Up to $1,000",
+  },
+  {
+    title: "Premium",
+    body: "Collision Damage Waiver, contingent liability, and supplemental liability.",
+    owe: "Up to $500",
+  },
+]
+
+export const protectionFaqs = [
+  {
+    question: "Do I have to buy a protection plan?",
+    answer:
+      "No. The plans at checkout are optional. The trip still follows the rental agreement. Share Your Car does not underwrite coverage.",
+  },
+  {
+    question: "Does my own car insurance cover the rental?",
+    answer:
+      "Ask your own insurer. This site does not promise that a personal auto policy covers a peer-to-peer trip.",
+  },
+  {
+    question: "What is the difference between liability and vehicle damage?",
+    answer:
+      "The collision waiver is damage to the rental car. Contingent and supplemental liability are about harm to other people when the renter is at fault.",
+  },
+  {
+    question: "How much would I owe?",
+    answer:
+      "On Bonzah's published tiers, the renter's maximum responsibility for covered damage is up to $2,500, $1,000, or $500, depending on the tier. This prototype's checkout uses two plans instead: Bonzah Basic at $15 a day and Roamly at $25 a day. The total is shown before you confirm.",
+  },
+  {
+    question: "What should I do in an emergency?",
+    answer:
+      "Call 911 first if anyone is hurt. Then reach the host and support@shareyourcar.us. Trip support is open daily, 8 AM–8 PM ET.",
+  },
+  {
+    question: "Can I add another driver?",
+    answer:
+      "Every driver must be 21 or older, hold a valid license, and be listed on the agreement before pickup. An unlisted driver is the renter's responsibility.",
+  },
+]
+
 export const legalDocs = [
   {
     title: "Terms of Service",

@@ -6,6 +6,7 @@
 
 import Link from "next/link"
 
+import { LoopForm } from "@/components/layout/loop-form"
 import { Wordmark } from "@/components/layout/wordmark"
 
 export function SiteFooter() {
@@ -23,8 +24,10 @@ export function SiteFooter() {
           <ul className="flex flex-col gap-2 text-sm">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/search">Inventory</Link></li>
+            <li><Link href="/how-it-works">How it works</Link></li>
             <li><Link href="/about">About</Link></li>
             <li><Link href="/testimonials">Testimonials</Link></li>
+            <li><Link href="/favorites">Favorites</Link></li>
             <li><Link href="/contact">Contact us</Link></li>
           </ul>
         </div>
@@ -32,8 +35,9 @@ export function SiteFooter() {
           <h2 className="text-xs tracking-[0.18em] uppercase">Hosting</h2>
           <ul className="flex flex-col gap-2 text-sm">
             <li><Link href="/become-host">List your car</Link></li>
-            <li><Link href="/host">Host tools</Link></li>
-            <li><Link href="/legal">Protection & coverage</Link></li>
+            <li><Link href="/host-tools">Host tools</Link></li>
+            <li><Link href="/host">Your fleet</Link></li>
+            <li><Link href="/insurance">Protection & coverage</Link></li>
           </ul>
         </div>
         <div className="flex flex-col gap-3">
@@ -41,6 +45,7 @@ export function SiteFooter() {
           <p className="text-sm text-muted-foreground">
             Get hosting tips, new features, and deals — no spam, unsubscribe anytime.
           </p>
+          <LoopForm />
         </div>
       </div>
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 border-t border-border px-4 py-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between md:px-8">

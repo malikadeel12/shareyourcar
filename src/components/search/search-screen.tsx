@@ -21,6 +21,7 @@ import { useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 
 import { SearchCard } from "@/components/home/search-card"
+import { Reveal } from "@/components/motion/reveal"
 import { VehicleGrid } from "@/components/home/vehicle-grid"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
@@ -64,6 +65,7 @@ export function SearchScreen() {
   const [seats, setSeats] = useState("")
   const [fuel, setFuel] = useState("")
   const [time, setTime] = useState("10:00 AM")
+  const [sort, setSort] = useState("recommended")
 
   const heading = useMemo(() => {
     if (!where || where === "Nearby") return "Cars near you"
@@ -85,9 +87,11 @@ export function SearchScreen() {
         <p className="text-xs tracking-[0.22em] text-muted-foreground uppercase">
           Inventory
         </p>
-        <h1 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
-          {heading}
-        </h1>
+        <Reveal>
+          <h1 className="mt-3 font-serif text-5xl leading-[0.95] tracking-[-0.04em] md:text-7xl">
+            {heading}
+          </h1>
+        </Reveal>
         <p className="mt-4 text-sm text-muted-foreground">
           {matchCount} {matchCount === 1 ? "car" : "cars"} listed · Pickup at {time}
         </p>
@@ -101,6 +105,17 @@ export function SearchScreen() {
           <FilterSelect label="Price" value={price} options={prices} onChange={setPrice} />
           <FilterSelect label="Seats" value={seats} options={seatChoices} onChange={setSeats} />
           <FilterSelect label="Fuel" value={fuel} options={fuels} onChange={setFuel} />
+          <FilterSelect
+            label="Sort"
+            value={sort}
+            options={[
+              { label: "Recommended", value: "recommended" },
+              { label: "Price: low to high", value: "price-asc" },
+              { label: "Price: high to low", value: "price-desc" },
+              { label: "Highest rated", value: "rating" },
+            ]}
+            onChange={setSort}
+          />
           <FilterSelect
             label="Pickup time"
             value={time}
@@ -135,6 +150,7 @@ export function SearchScreen() {
         fuel={fuel || undefined}
         from={from}
         to={to}
+        sort={sort as "recommended" | "price-asc" | "price-desc" | "rating"}
         pause
       />
     </section>
